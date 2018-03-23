@@ -51,7 +51,7 @@ if ! $(noroot wp core is-installed); then
 
   wget "${DB_BACKUP_URL}"
   gunzip "${DB_BACKUP_FILENAME}.gz"
-  mysql -u root "${DB_NAME}" < "${DB_BACKUP_FILENAME}"
+  mysql -uwp -pwp "${DB_NAME}" < "${DB_BACKUP_FILENAME}"
 else
   echo "Updating WordPress Stable..."
   cd ${VVV_PATH_TO_SITE}/public_html
