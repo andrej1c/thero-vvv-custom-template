@@ -9,6 +9,8 @@ WP_TYPE=`get_config_value 'wp_type' "single"`
 DB_NAME=`get_config_value 'db_name' "${VVV_SITE_NAME}"`
 DB_NAME=${DB_NAME//[\\\/\.\<\>\:\"\'\|\?\!\*-]/}
 DB_PREFIX=`get_config_value 'db_prefix' "wp_"`
+DB_BACKUP_URL=`get_config_value 'db_backup_url' ""`
+DB_BACKUP_FILENAME=`get_config_value 'db_backup_filename' ""`
 
 # Make a database, if we don't already have one
 echo -e "\nCreating database '${DB_NAME}' (if it's not already there)"
@@ -46,6 +48,10 @@ if ! $(noroot wp core is-installed); then
   fi
 
   noroot wp core ${INSTALL_COMMAND} --url="${DOMAIN}" --quiet --title="${SITE_TITLE}" --admin_name=admin --admin_email="admin@local.test" --admin_password="password"
+
+  wget "${DB_BACKUP_URL}"
+  gunzip "${DB_BACKUP_FILENAME}.gz"
+  mysql -u root "${DB_NAME}" < "${DB_BACKUP_FILENAME}"
 else
   echo "Updating WordPress Stable..."
   cd ${VVV_PATH_TO_SITE}/public_html
